@@ -6,11 +6,25 @@ if (!PROJECT_ID) {
   throw new Error('Please set GCLOUD_PROJECT_ID env var')
 }
 
+function createClient() {
+  if (process.env.GCLOUD_EMAIL && process.env.GCLOUD_PRIVATE_KEY) {
+    return PubSub({
+      projectId: PROJECT_ID
+    , credentials: {
+        client_email: process.env.GCLOUD_EMAIL
+      , private_key: process.env.GCLOUD_PRIVATE_KEY
+      }
+    })
+  }
+
+  return PubSub({
+    projectId: PROJECT_ID
+  })
+}
+
 module.exports = class Client {
   constructor(topic_name) {
-    this.client = PubSub({
-      projectId: PROJECT_ID
-    })
+    this.client = createClient()
     this.topic_name = topic_name
     this.topics = new Map()
     this.publishers = new Map()
