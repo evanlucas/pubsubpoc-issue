@@ -4,6 +4,7 @@ const log = require('kittie')
 const Pubsub = require('./pubsub')
 
 const TOPIC_NAME = process.env.TOPIC_NAME || 'testtopic'
+const INFINITE = process.env.INFINITE === '1'
 
 const client = new Pubsub(TOPIC_NAME)
 client.connect((err) => {
@@ -13,6 +14,14 @@ client.connect((err) => {
 
   for (var i = 0; i < 10; i++) {
     sendMessage()
+  }
+
+  if (INFINITE) {
+    setTimeout(() => {
+      setInterval(() => {
+        sendMessage()
+      }, 1000)
+    }, 2000)
   }
 })
 

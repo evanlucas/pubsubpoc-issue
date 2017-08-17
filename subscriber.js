@@ -3,6 +3,11 @@
 const log = require('kittie')
 const Pubsub = require('./pubsub')
 
+process.on('unhandledRejection', (err) => {
+  console.error('unhandledRejection', err)
+  throw err
+})
+
 const TOPIC_NAME = process.env.TOPIC_NAME || 'testtopic'
 
 const client = new Pubsub(TOPIC_NAME)
