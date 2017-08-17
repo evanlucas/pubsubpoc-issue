@@ -36,17 +36,22 @@ function getMessage() {
 function sendMessage() {
   const msg = getMessage()
   log.info('publish', msg.id)
+  const start = process.hrtime()
   client.publish(msg, (err) => {
+    const diff = process.hrtime(start)
+    const duration = `${diff[0] * 1000 + diff[1] / 1e6}ms`
     if (err) {
       log.error(err, {
         err
       , message: 'failed to publish message'
+      , duration
       })
       return
     }
 
     log.info('successfully published message', {
       msg
+    , duration
     })
   })
 }
